@@ -10,6 +10,7 @@ import android.os.Looper
 import android.os.Message
 import android.util.AttributeSet
 import android.view.View
+import androidx.core.content.withStyledAttributes
 import java.util.*
 import kotlin.math.cos
 import kotlin.math.sin
@@ -17,7 +18,7 @@ import kotlin.math.sin
 
 class Clock @JvmOverloads constructor(
     context: Context,
-    attrs: AttributeSet? = null,
+    attrs: AttributeSet?,
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
@@ -29,12 +30,39 @@ class Clock @JvmOverloads constructor(
     private var degreeMin = 0
     private var degreeSec = 0
 
-    private var calendar = Calendar.getInstance()
-
     private var centerX = 0F
     private var centerY = 0F
     private var radius = 0F
 
+    private var colorBLUE = 0
+    private var colorRED = 0
+    private var colorGREEN = 0
+
+    private var size5 = 0f
+    private var size10 = 0f
+    private var size20 = 0f
+
+    private var calendar = Calendar.getInstance()
+
+    private val handler = object : Handler(Looper.getMainLooper()) {
+        override fun handleMessage(msg: Message) {
+            super.handleMessage(msg)
+            getTime()
+            invalidate()
+        }
+    }
+
+    init {
+        getAttributes(attrs)
+    }
+
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
+
+        initdata()
+        drawCalibration(canvas)
+        drawLines(canvas)
+    }
 
     private fun initdata() {
 
@@ -60,11 +88,15 @@ class Clock @JvmOverloads constructor(
         handler.sendEmptyMessageDelayed(1, 1000)
     }
 
-    private val handler = object : Handler(Looper.getMainLooper()) {
-        override fun handleMessage(msg: Message) {
-            super.handleMessage(msg)
-            getTime()
-            invalidate()
+    private fun getAttributes(attrs: AttributeSet?) {
+        context.withStyledAttributes(attrs, R.styleable.Clock) {
+            colorBLUE = getColor(R.styleable.Clock_colorBLUE, 0)
+            colorRED = getColor(R.styleable.Clock_colorRED, 0)
+            colorGREEN = getColor(R.styleable.Clock_colorGREEN, 0)
+
+            size5 = getFloat(R.styleable.Clock_size5, 0f)
+            size10 = getFloat(R.styleable.Clock_size10, 0f)
+            size20 = getFloat(R.styleable.Clock_size20, 0f)
         }
     }
 
@@ -113,10 +145,10 @@ class Clock @JvmOverloads constructor(
         }
     }
 
-    private fun drawLine(canvas: Canvas) {
+    private fun drawLines(canvas: Canvas) {
         canvas.apply {
-            line.strokeWidth = 20F
-            line.color = BLUE
+            line.strokeWidth = size20
+            line.color = colorBLUE
             canvas.drawLine(
                 centerX,
                 centerY,
@@ -125,8 +157,8 @@ class Clock @JvmOverloads constructor(
                 line
             )
 
-            line.strokeWidth = 10F
-            line.color = RED
+            line.strokeWidth = size10
+            line.color = colorRED
             canvas.drawLine(
                 centerX,
                 centerY,
@@ -135,8 +167,8 @@ class Clock @JvmOverloads constructor(
                 line
             )
 
-            line.strokeWidth = 5F
-            line.color = GREEN
+            line.strokeWidth = size5
+            line.color = colorGREEN
             canvas.drawLine(
                 centerX,
                 centerY,
@@ -146,13 +178,5 @@ class Clock @JvmOverloads constructor(
             )
         }
         canvas.drawPoint(centerX, centerY, point)
-    }
-
-    override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
-
-        initdata()
-        drawCalibration(canvas)
-        drawLine(canvas)
     }
 }

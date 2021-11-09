@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="Clock">
+        <attr name="colorBLUE" format="color" />
+        <attr name="colorRED" format="color" />
+        <attr name="colorGREEN" format="color" />
+
+        <attr name="size5" format="float" />
+        <attr name="size10" format="float" />
+        <attr name="size20" format="float" />
+    </declare-styleable>
+</resources>

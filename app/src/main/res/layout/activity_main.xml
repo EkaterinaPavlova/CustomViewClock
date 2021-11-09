@@ -13,6 +13,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:colorBLUE="#0091EA"
+        app:colorRED="#D50000"
+        app:colorGREEN="#00C853"
+        app:size5="5"
+        app:size10="10"
+        app:size20="20"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
